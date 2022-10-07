@@ -1,26 +1,3 @@
-css:
-  .dropdown-menu-columns {
-    -webkit-column-count: 3; /* Chrome, Safari, Opera */
-    -moz-column-count: 3; /* Firefox */
-    column-count: 3;
-  }
-
-  @media (max-width: 800px) {
-    .dropdown-menu-columns {
-      -webkit-column-count: 2; /* Chrome, Safari, Opera */
-      -moz-column-count: 2; /* Firefox */
-      column-count: 2;
-    }
-  }
-
-  @media (max-width: 500px) {
-    .dropdown-menu-columns {
-      -webkit-column-count: 1; /* Chrome, Safari, Opera */
-      -moz-column-count: 1; /* Firefox */
-      column-count: 1;
-    }
-  }
-
 .navbar.navbar-expand-md.navbar-light
   a.navbar-brand.me-md-4(href='/')
     = image_tag 'logo.png', width: 30, alt: 'Code Basics logo'
@@ -37,12 +14,22 @@ css:
       li.nav-item.dropdown.me-md-4
         button.nav-link.text-dark.dropdown-toggle href='#' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'
           = t('.change_course')
-        ul.dropdown-menu.dropdown-menu-columns.dropdown-menu-arrow
-          - @language_version_infos.each do |info|
-            li
-              = link_to language_path(info.language.slug), class: 'dropdown-item d-flex align-items-center py-2'
-                span.colored.me-2.fs-5 class="devicon-#{get_language_devicon_name(info.language.slug)}-plain"
-                span = info.language_version.name
+        ul.dropdown-menu.dropdown-menu-arrow
+          div.d-flex.flex-row
+            div.flex-column
+              - @language_version_infos.each do |info|
+                - if info.language.progress === 'completed'
+                  li
+                    = link_to language_path(info.language.slug), info: info, class: 'dropdown-item d-flex align-items-center py-2'
+                      span.colored.me-2.fs-5 class="devicon-#{get_language_devicon_name(info.language.slug)}-plain"
+                      span = info.language.name
+            div.flex-column
+              - @language_version_infos.each do |info|
+                - if info.language.progress != 'completed'
+                  li
+                    = link_to language_path(info.language.slug), info: info, class: 'dropdown-item d-flex align-items-center py-2'
+                      span.colored.me-2.fs-5 class="devicon-#{get_language_devicon_name(info.language.slug)}-plain"
+                      span = info.language.name
 
       li.nav-item.dropdown.me-2.me-auto
         - if I18n.locale == :ru
